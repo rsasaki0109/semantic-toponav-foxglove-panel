@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+*.foxe
+*.log
+.DS_Store
+.vscode/
+.idea/
