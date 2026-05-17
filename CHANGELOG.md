@@ -6,7 +6,33 @@ and the extension uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
-Initial scaffold landing. No tagged release yet.
+## [0.2.0] — 2026-05-18
+
+### Added
+
+- Second panel — `Semantic TopoNav Conflicts`. Subscribes to
+  `/conflict_explanations` and decodes the v1 `ConflictExplanation`
+  wire format in either of two shapes the upstream bridges emit:
+  a JSON array of records (typical bnb-scheduler batch) or a single
+  record (typical rosbridge-style per-message form). Renders a
+  count-by-`reason_code` summary band plus a row-per-conflict table
+  with `blocked_agent_id`, `blocking_agents`, `blocking_resources`,
+  and `detail`. Reason badges follow the same color palette as
+  `SemanticTopoNavPanel` so a Conflicts panel sits beside the
+  Fleet panel without a palette clash.
+- `src/conflicts.ts` — pure data transform paired with the panel.
+  Sorts conflicts by `reason_code` then `blocked_agent_id` and emits
+  per-reason counters; `normalizeConflicts` accepts either a single
+  record or an array and rejects anything else with a parse-time
+  error so the panel can surface a clear diagnostic instead of
+  rendering garbage.
+- jest unit tests for the conflicts transform covering empty inputs,
+  the sort order, per-reason counts, and the array / single-record /
+  invalid normalization paths.
+
+## [0.1.0] — 2026-05-17
+
+Initial scaffold landing.
 
 ### Added
 
@@ -39,8 +65,6 @@ Initial scaffold landing. No tagged release yet.
   follow-up issue.
 - ESLint setup (`@foxglove/eslint-plugin`) — same reason; the
   TypeScript strict mode + tsc already gives the v0.1.0 floor.
-- ConflictExplanation panel surface — the schema and types are wired,
-  but a dedicated UI for the diagnostic stream is a follow-up.
 
 ### Depends on
 
