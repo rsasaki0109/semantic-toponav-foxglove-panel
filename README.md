@@ -5,7 +5,7 @@ v1-locked wire formats produced by
 [`semantic-toponav`](https://github.com/rsasaki0109/semantic-toponav)
 — a multi-agent semantic-topological planning layer.
 
-The v0.1.0 scaffold ships **one** panel:
+As of v0.2.0 the extension ships **two** panels:
 
 - **Semantic TopoNav Panel** — subscribes to `/fleet_plan_result`,
   decodes the `FleetPlanResult` v1 payload, and draws a per-agent
@@ -13,6 +13,13 @@ The v0.1.0 scaffold ships **one** panel:
   agents and denied agents are visually separated; midnight-wrapping
   reservations (`end <= start`) are detected and rendered as two
   segments.
+- **Semantic TopoNav Conflicts** — subscribes to
+  `/conflict_explanations`, decodes the `ConflictExplanation` v1
+  payload (either a single record or an array of them, both shapes
+  are accepted), and renders a count-by-`reason_code` summary band
+  plus a row-per-conflict table with `blocked_agent_id`,
+  `blocking_agents`, `blocking_resources`, and `detail`. Sits beside
+  the Fleet panel for diagnosing `reservation_conflict` denials.
 
 ## Wire format
 
@@ -31,9 +38,10 @@ require a matching major bump here.
 
 ## Topic conventions
 
-| Topic                  | Payload                                                                  |
-|------------------------|--------------------------------------------------------------------------|
-| `/fleet_plan_result`   | JSON-serialized `FleetPlanResult` (either as a string or as a `data` field on a schemaless message). |
+| Topic                      | Payload                                                                                                    |
+|----------------------------|------------------------------------------------------------------------------------------------------------|
+| `/fleet_plan_result`       | JSON-serialized `FleetPlanResult` (either as a string or as a `data` field on a schemaless message).       |
+| `/conflict_explanations`   | JSON-serialized `ConflictExplanation[]` or a single `ConflictExplanation`. Inline string or `data` field.  |
 
 You can publish such a topic from any bridge — the simplest path is to
 serialize the dataclass via `dataclasses.asdict` in the upstream
