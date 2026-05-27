@@ -1,10 +1,10 @@
 {
   "name": "semantic-toponav-foxglove-panel",
   "displayName": "Semantic TopoNav Panel",
-  "description": "Visualize FleetPlanResult / ConflictExplanation from the semantic-toponav planning layer.",
+  "description": "Visualize FleetPlanResult / ConflictExplanation / ResolveTrace from the semantic-toponav planning layer.",
   "publisher": "rsasaki0109",
   "homepage": "https://github.com/rsasaki0109/semantic-toponav-foxglove-panel",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "main": "./dist/extension.js",
   "keywords": ["foxglove", "extension", "semantic-toponav"],

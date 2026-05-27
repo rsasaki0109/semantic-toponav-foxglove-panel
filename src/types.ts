@@ -40,3 +40,31 @@ export interface ConflictExplanation {
   blocking_resources: string[];
   detail: string;
 }
+
+// ResolveTrace v1 (`schemas/resolve_trace_v1.schema.json`) — emitted by
+// `LLMResolveResult.to_dict` in the upstream Python resolver. The panel
+// renders the final ranking joined against the deterministic baseline
+// and surfaces the LLM pick / used_fallback / clarification path.
+
+export interface GoalCandidate {
+  node_id: string;
+  score: number;
+  reasons: string[];
+}
+
+export interface ClarificationQuestion {
+  question: string;
+  candidates: GoalCandidate[];
+}
+
+export interface ResolveTrace {
+  query: string;
+  candidates: GoalCandidate[];
+  base_candidates: GoalCandidate[];
+  llm_pick: string | null;
+  llm_reason: string | null;
+  raw_response: string;
+  used_fallback: boolean;
+  embedding_scores: Record<string, number>;
+  clarification: ClarificationQuestion | null;
+}
