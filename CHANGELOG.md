@@ -6,6 +6,37 @@ and the extension uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-05-28
+
+### Added
+
+- Third panel — `Semantic TopoNav Resolve`. Subscribes to
+  `/resolve_trace` and decodes the v1 `ResolveTrace` wire format
+  (`LLMResolveResult.to_dict` from the upstream resolver). Renders
+  the final candidate ranking joined against the deterministic
+  baseline so the LLM rewrite is legible at a glance — every row
+  shows its `rank → base_rank` movement with an arrow / color and
+  the LLM-picked row is highlighted. Surfaces `pick_status`
+  (`llm_pick` / `fallback` / `clarification_pending` / `no_pick`),
+  the LLM's picked node id, the one-line `llm_reason`, and the
+  `embedding_score` column when a `query_encoder` was supplied
+  upstream. When the resolver emits a `clarification`, the question
+  + its candidate set are rendered in a separate band above the
+  main table. Completes per-wire-format panel coverage of the v1
+  schemas (FleetPlanResult / ConflictExplanation / ResolveTrace).
+- `src/resolve.ts` — pure data transform paired with the panel.
+  Builds `ResolveView` from `ResolveTrace`: per-candidate
+  `ResolveRow` with rank, base_rank lookup, embedding_score
+  attach, and an `is_llm_pick` flag. `normalizeResolveTrace`
+  validates the v1 required-fields set and rejects payloads that
+  are missing fields or have non-array candidates, so the panel
+  surfaces a parse error rather than rendering garbage.
+- jest unit tests for the resolve transform covering all four
+  `pick_status` paths (no_pick / llm_pick / fallback /
+  clarification_pending), partial embedding-score coverage, the
+  base_rank-not-found edge case, and the normalize validation
+  paths.
+
 ### Changed
 
 - CI now also runs `npm run build` on every push / pull request, and
