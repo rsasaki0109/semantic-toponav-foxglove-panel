@@ -60,9 +60,9 @@ npm run build           # produces dist/extension.js via foxglove-extension
 npm run local-install   # installs the .foxe into your Foxglove install
 ```
 
-`foxglove-extension build` / packaging end-to-end is **not** gated by
-CI at v0.1.0 — the scaffold's CI gate is typecheck + jest. Build
-parity is tracked as a follow-up.
+CI runs `typecheck` + `jest` + `build` on every push and pull
+request, and additionally `package`s the `.foxe` archive and uploads
+it as a workflow artifact on tag pushes (`v*`).
 
 ## License
 

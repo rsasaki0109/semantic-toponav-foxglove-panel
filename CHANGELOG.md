@@ -6,6 +6,17 @@ and the extension uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
+### Changed
+
+- CI now also runs `npm run build` on every push / pull request, and
+  on tag pushes (`v*`) additionally runs `npm run package` and
+  uploads the resulting `.foxe` archive as a workflow artifact.
+  Closes the v0.1.0 deferred follow-up around build-parity in CI.
+- Actions bumped to Node.js 24 runtime — `actions/checkout@v4 ->
+  @v6`, `actions/setup-node@v4 -> @v5` (with `node-version: "22"`,
+  cache: npm). Switched `npm install` to `npm ci` so CI installs
+  exactly the locked dependency tree.
+
 ## [0.2.0] — 2026-05-18
 
 ### Added
