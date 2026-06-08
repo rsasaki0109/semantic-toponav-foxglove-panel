@@ -5,7 +5,7 @@ v1-locked wire formats produced by
 [`semantic-toponav`](https://github.com/rsasaki0109/semantic-toponav)
 — a multi-agent semantic-topological planning layer.
 
-As of v0.4.0 the extension ships **four** panels — three for the v1 wire
+As of v0.5.0 the extension ships **four** panels — three for the v1 wire
 formats plus the escape-room replay status panel:
 
 - **Semantic TopoNav Panel** — subscribes to `/fleet_plan_result`,
@@ -35,9 +35,10 @@ formats plus the escape-room replay status panel:
   `/semantic_toponav/escape_room/status`, decodes the
   `EscapeRoomStatus` demo/replay payload from the
   [`RobotEscapeRoom`](https://github.com/rsasaki0109/RobotEscapeRoom)
-  MCAP exporter, and renders the turn caption + color-coded puzzle
-  events (items, riddles, the Floor-3 twist, escape). Drop it beside
-  the 3D scene when replaying `robot_escape_room_demo.mcap`.
+  MCAP exporter, and renders the per-room **quest banner** (title,
+  objective, mechanic, ACTIVE/COMPLETE), turn caption, and color-coded
+  puzzle events (items, riddles, the Floor-3 twist, escape). Drop it
+  beside the 3D scene when replaying `robot_escape_room_demo.mcap`.
 
 ## Wire format
 
@@ -70,7 +71,7 @@ require a matching major bump here.
 | `/fleet_plan_result`       | JSON-serialized `FleetPlanResult` (either as a string or as a `data` field on a schemaless message).       |
 | `/conflict_explanations`   | JSON-serialized `ConflictExplanation[]` or a single `ConflictExplanation`. Inline string or `data` field.  |
 | `/resolve_trace`           | JSON-serialized `ResolveTrace` (single record per emit). Inline string or `data` field.                    |
-| `/semantic_toponav/escape_room/status` | JSON-serialized `EscapeRoomStatus` (turn caption + puzzle events). Inline string or `data` field. |
+| `/semantic_toponav/escape_room/status` | JSON-serialized `EscapeRoomStatus` (turn caption, optional per-room quest fields, puzzle events). Inline string or `data` field. |
 
 You can publish such a topic from any bridge — the simplest path is to
 serialize the dataclass via `dataclasses.asdict` in the upstream

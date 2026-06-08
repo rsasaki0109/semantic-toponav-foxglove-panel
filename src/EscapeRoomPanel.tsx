@@ -35,6 +35,53 @@ function decodeStatusMessage(event: Immutable<MessageEvent>): EscapeRoomStatus {
   return normalizeEscapeRoomStatus(raw);
 }
 
+function QuestBanner({ quest }: { quest: NonNullable<EscapeRoomView["quest"]> }): JSX.Element {
+  const complete = quest.complete;
+  const accent = complete ? "#a7f3d0" : "#f59e0b";
+  const outline = complete ? "#2dd4bf" : "#f59e0b";
+  const fill = complete ? "#063c2d" : "#2d2308";
+  const room = quest.roomId.replace(/_/g, " ");
+  return (
+    <div
+      style={{
+        marginBottom: 12,
+        padding: "10px 12px",
+        borderRadius: 8,
+        border: `1px solid ${outline}`,
+        backgroundColor: fill,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
+        <span style={{ color: accent, fontSize: 11, fontWeight: 600 }}>
+          {complete ? "COMPLETE" : "ACTIVE"}
+          {room !== "" ? ` · ${room}` : ""}
+        </span>
+        {quest.mechanic !== "" && (
+          <span
+            style={{
+              padding: "1px 8px",
+              borderRadius: 6,
+              border: `1px solid ${outline}`,
+              backgroundColor: "#121f34",
+              color: accent,
+              fontSize: 10,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {quest.mechanic}
+          </span>
+        )}
+      </div>
+      <div style={{ fontSize: 14, fontWeight: 600, color: "#f5f5f5", marginBottom: 4 }}>
+        {quest.title}
+      </div>
+      {quest.detail !== "" && (
+        <div style={{ color: "#bbb", fontSize: 12 }}>{quest.detail}</div>
+      )}
+    </div>
+  );
+}
+
 function EscapeRoomPanelView({ view }: { view: EscapeRoomView }): JSX.Element {
   return (
     <>
@@ -55,6 +102,7 @@ function EscapeRoomPanelView({ view }: { view: EscapeRoomView }): JSX.Element {
           <span style={{ color: "#22d3ee", fontSize: 12, fontWeight: 600 }}>ESCAPED</span>
         )}
       </div>
+      {view.quest !== null && <QuestBanner quest={view.quest} />}
       <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 6, color: "#f5f5f5" }}>
         {view.caption || "(no caption)"}
       </div>

@@ -79,4 +79,9 @@ export interface EscapeRoomStatus {
   caption: string;
   detail: string;
   events: string[];
+  room_id?: string;
+  quest_title?: string;
+  quest_detail?: string;
+  quest_mechanic?: string;
+  quest_complete?: boolean;
 }

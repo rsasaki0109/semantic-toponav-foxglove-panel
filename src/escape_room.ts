@@ -7,12 +7,21 @@ export interface EscapeRoomEventRow {
   kind: EventKind;
 }
 
+export interface EscapeRoomQuest {
+  roomId: string;
+  title: string;
+  detail: string;
+  mechanic: string;
+  complete: boolean;
+}
+
 export interface EscapeRoomView {
   turn: number;
   caption: string;
   detail: string;
   events: EscapeRoomEventRow[];
   isEscaped: boolean;
+  quest: EscapeRoomQuest | null;
 }
 
 export function classifyEvent(text: string): EventKind {
@@ -34,6 +43,19 @@ export function classifyEvent(text: string): EventKind {
   return "other";
 }
 
+function buildQuest(status: EscapeRoomStatus): EscapeRoomQuest | null {
+  if (!status.quest_title) {
+    return null;
+  }
+  return {
+    roomId: status.room_id ?? "",
+    title: status.quest_title,
+    detail: status.quest_detail ?? "",
+    mechanic: status.quest_mechanic ?? "",
+    complete: status.quest_complete === true,
+  };
+}
+
 export function buildEscapeRoomView(status: EscapeRoomStatus): EscapeRoomView {
   const events = status.events.map((text) => ({
     text,
@@ -45,6 +67,7 @@ export function buildEscapeRoomView(status: EscapeRoomStatus): EscapeRoomView {
     detail: status.detail,
     events,
     isEscaped: status.events.includes("ESCAPED"),
+    quest: buildQuest(status),
   };
 }
 
@@ -75,10 +98,29 @@ export function normalizeEscapeRoomStatus(raw: unknown): EscapeRoomStatus {
   if (!Array.isArray(obj.events) || !obj.events.every((e) => typeof e === "string")) {
     throw new Error("EscapeRoomStatus.events must be a string array");
   }
+  const optionalString = (key: keyof EscapeRoomStatus): string | undefined => {
+    if (!(key in obj)) {
+      return undefined;
+    }
+    const value = obj[key];
+    if (typeof value !== "string") {
+      throw new Error(`EscapeRoomStatus.${key} must be a string when present`);
+    }
+    return value;
+  };
+  if ("quest_complete" in obj && typeof obj.quest_complete !== "boolean") {
+    throw new Error("EscapeRoomStatus.quest_complete must be a boolean when present");
+  }
   return {
     turn: obj.turn,
     caption: obj.caption,
     detail: obj.detail,
     events: obj.events as string[],
+    room_id: optionalString("room_id"),
+    quest_title: optionalString("quest_title"),
+    quest_detail: optionalString("quest_detail"),
+    quest_mechanic: optionalString("quest_mechanic"),
+    quest_complete:
+      "quest_complete" in obj ? (obj.quest_complete as boolean) : undefined,
   };
 }
