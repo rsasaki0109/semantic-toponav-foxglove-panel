@@ -42,12 +42,32 @@ describe("buildEscapeRoomView", () => {
     );
     expect(view.turn).toBe(6);
     expect(view.isEscaped).toBe(true);
+    expect(view.quest).toBeNull();
     expect(view.events.map((e) => `${e.kind}:${e.text}`)).toEqual([
       "system:T-0 online — Holding Cell",
       "item:item: hatch_code",
       "twist:twist: Floor-3 exit sealed",
       "escape:ESCAPED",
     ]);
+  });
+
+  it("includes per-room quest metadata when present", () => {
+    const view = buildEscapeRoomView(
+      status({
+        room_id: "server_room",
+        quest_title: "Quest · Terminal I",
+        quest_detail: "Ground the clue — where is the blue keycard?",
+        quest_mechanic: "resolve_goal",
+        quest_complete: false,
+      }),
+    );
+    expect(view.quest).toEqual({
+      roomId: "server_room",
+      title: "Quest · Terminal I",
+      detail: "Ground the clue — where is the blue keycard?",
+      mechanic: "resolve_goal",
+      complete: false,
+    });
   });
 });
 
@@ -78,5 +98,28 @@ describe("normalizeEscapeRoomStatus", () => {
         events: [1],
       }),
     ).toThrow(/string array/);
+  });
+
+  it("accepts optional quest fields", () => {
+    const s = status({
+      room_id: "main_lab",
+      quest_title: "Quest · Blue lock",
+      quest_detail: "Collect the blue keycard for Security",
+      quest_mechanic: "block_edges",
+      quest_complete: true,
+    });
+    expect(normalizeEscapeRoomStatus(s)).toEqual(s);
+  });
+
+  it("rejects invalid quest field types", () => {
+    expect(() =>
+      normalizeEscapeRoomStatus({
+        turn: 1,
+        caption: "x",
+        detail: "x",
+        events: [],
+        quest_complete: "yes",
+      }),
+    ).toThrow(/quest_complete/);
   });
 });
