@@ -16,7 +16,7 @@ and the extension uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   and cumulative puzzle events). Renders the turn badge, headline
   caption, and a color-coded event list (`item:` / `riddle:` /
   `twist:` / `ESCAPED` / system boot). Matches the README hero
-  subtitles in `robot-escape-room`'s Foxglove MCAP.
+  subtitles in `RobotEscapeRoom`'s Foxglove MCAP.
 - `src/escape_room.ts` — pure data transform paired with the panel.
   `buildEscapeRoomView` classifies event strings and flags escape;
   `normalizeEscapeRoomStatus` validates the required-fields set.

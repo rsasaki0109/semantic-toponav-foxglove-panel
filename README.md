@@ -34,7 +34,7 @@ formats plus the escape-room replay status panel:
 - **Semantic TopoNav Escape Room** — subscribes to
   `/semantic_toponav/escape_room/status`, decodes the
   `EscapeRoomStatus` demo/replay payload from the
-  [`robot-escape-room`](https://github.com/rsasaki0109/robot-escape-room)
+  [`RobotEscapeRoom`](https://github.com/rsasaki0109/RobotEscapeRoom)
   MCAP exporter, and renders the turn caption + color-coded puzzle
   events (items, riddles, the Floor-3 twist, escape). Drop it beside
   the 3D scene when replaying `robot_escape_room_demo.mcap`.
@@ -51,7 +51,7 @@ The panel decodes the JSON Schemas locked in `semantic-toponav` at
 - `EscapeRoomStatus` — demo/replay JSON on
   `/semantic_toponav/escape_room/status` (not one of the six v1 product
   schemas; defined in the upstream
-  [`export_escape_room_foxglove_mcap.py`](https://github.com/rsasaki0109/robot-escape-room/blob/main/examples/export_escape_room_foxglove_mcap.py))
+  [`export_escape_room_foxglove_mcap.py`](https://github.com/rsasaki0109/RobotEscapeRoom/blob/main/examples/export_escape_room_foxglove_mcap.py))
 
 The TypeScript mirror lives in `src/types.ts`. Pure data transforms —
 `src/gantt.ts` for `FleetPlanResult → GanttView`, `src/conflicts.ts`
