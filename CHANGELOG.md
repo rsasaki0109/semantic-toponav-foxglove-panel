@@ -6,6 +6,22 @@ and the extension uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-06-09
+
+### Added
+
+- **Per-room quest banner** on the Escape Room panel. When
+  `EscapeRoomStatus` carries `room_id`, `quest_title`, `quest_detail`,
+  `quest_mechanic`, and `quest_complete` (emitted by
+  `RobotEscapeRoom` v1.0.7+ MCAP), the panel renders an ACTIVE /
+  COMPLETE quest card above the turn caption — matching the README hero
+  GIF overlays.
+
+### Changed
+
+- `EscapeRoomStatus` optional quest fields are validated when present;
+  older MCAPs without them still decode normally.
+
 ## [0.4.0] — 2026-06-09
 
 ### Added
