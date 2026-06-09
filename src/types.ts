@@ -68,3 +68,15 @@ export interface ResolveTrace {
   embedding_scores: Record<string, number>;
   clarification: ClarificationQuestion | null;
 }
+
+// EscapeRoomStatus — emitted by the robot-escape-room demo MCAP exporter
+// and the escape_room_runner ROS node on
+// `/semantic_toponav/escape_room/status`. Not one of the six v1-locked
+// product schemas, but stable demo/replay support.
+
+export interface EscapeRoomStatus {
+  turn: number;
+  caption: string;
+  detail: string;
+  events: string[];
+}

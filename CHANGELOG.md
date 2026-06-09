@@ -6,6 +6,23 @@ and the extension uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-06-09
+
+### Added
+
+- Fourth panel — `Semantic TopoNav Escape Room`. Subscribes to
+  `/semantic_toponav/escape_room/status` and decodes the
+  `EscapeRoomStatus` demo/replay payload (turn caption, detail line,
+  and cumulative puzzle events). Renders the turn badge, headline
+  caption, and a color-coded event list (`item:` / `riddle:` /
+  `twist:` / `ESCAPED` / system boot). Matches the README hero
+  subtitles in `robot-escape-room`'s Foxglove MCAP.
+- `src/escape_room.ts` — pure data transform paired with the panel.
+  `buildEscapeRoomView` classifies event strings and flags escape;
+  `normalizeEscapeRoomStatus` validates the required-fields set.
+- jest unit tests for event classification, escape detection, and
+  normalize validation paths.
+
 ## [0.3.0] — 2026-05-28
 
 ### Added

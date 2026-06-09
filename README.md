@@ -5,7 +5,8 @@ v1-locked wire formats produced by
 [`semantic-toponav`](https://github.com/rsasaki0109/semantic-toponav)
 — a multi-agent semantic-topological planning layer.
 
-As of v0.3.0 the extension ships **three** panels — one per v1 wire format:
+As of v0.4.0 the extension ships **four** panels — three for the v1 wire
+formats plus the escape-room replay status panel:
 
 - **Semantic TopoNav Panel** — subscribes to `/fleet_plan_result`,
   decodes the `FleetPlanResult` v1 payload, and draws a per-agent
@@ -30,6 +31,13 @@ As of v0.3.0 the extension ships **three** panels — one per v1 wire format:
   when a `query_encoder` was supplied upstream. When the resolver
   emits a `clarification`, the question + its candidate set are
   rendered in a separate band above the main table.
+- **Semantic TopoNav Escape Room** — subscribes to
+  `/semantic_toponav/escape_room/status`, decodes the
+  `EscapeRoomStatus` demo/replay payload from the
+  [`robot-escape-room`](https://github.com/rsasaki0109/robot-escape-room)
+  MCAP exporter, and renders the turn caption + color-coded puzzle
+  events (items, riddles, the Floor-3 twist, escape). Drop it beside
+  the 3D scene when replaying `robot_escape_room_demo.mcap`.
 
 ## Wire format
 
@@ -40,11 +48,16 @@ The panel decodes the JSON Schemas locked in `semantic-toponav` at
 - [`PlanWithSchedulerResult`](https://github.com/rsasaki0109/semantic-toponav/blob/main/schemas/plan_with_scheduler_result_v1.schema.json)
 - [`ConflictExplanation`](https://github.com/rsasaki0109/semantic-toponav/blob/main/schemas/conflict_explanation_v1.schema.json)
 - [`ResolveTrace`](https://github.com/rsasaki0109/semantic-toponav/blob/main/schemas/resolve_trace_v1.schema.json)
+- `EscapeRoomStatus` — demo/replay JSON on
+  `/semantic_toponav/escape_room/status` (not one of the six v1 product
+  schemas; defined in the upstream
+  [`export_escape_room_foxglove_mcap.py`](https://github.com/rsasaki0109/robot-escape-room/blob/main/examples/export_escape_room_foxglove_mcap.py))
 
 The TypeScript mirror lives in `src/types.ts`. Pure data transforms —
 `src/gantt.ts` for `FleetPlanResult → GanttView`, `src/conflicts.ts`
-for `ConflictExplanation[] → ConflictsView`, and `src/resolve.ts` for
-`ResolveTrace → ResolveView` — sit separately from the panel files
+for `ConflictExplanation[] → ConflictsView`, `src/resolve.ts` for
+`ResolveTrace → ResolveView`, and `src/escape_room.ts` for
+`EscapeRoomStatus → EscapeRoomView` — sit separately from the panel files
 and are unit-tested under `src/__tests__/`.
 
 Compatible with upstream `>= v1.0.0`. A v2 schema bump upstream would
@@ -57,6 +70,7 @@ require a matching major bump here.
 | `/fleet_plan_result`       | JSON-serialized `FleetPlanResult` (either as a string or as a `data` field on a schemaless message).       |
 | `/conflict_explanations`   | JSON-serialized `ConflictExplanation[]` or a single `ConflictExplanation`. Inline string or `data` field.  |
 | `/resolve_trace`           | JSON-serialized `ResolveTrace` (single record per emit). Inline string or `data` field.                    |
+| `/semantic_toponav/escape_room/status` | JSON-serialized `EscapeRoomStatus` (turn caption + puzzle events). Inline string or `data` field. |
 
 You can publish such a topic from any bridge — the simplest path is to
 serialize the dataclass via `dataclasses.asdict` in the upstream
